@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ophe — Brand Animation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Outfit:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<main class="animation-stage" id="stage">
+  <div class="scene" id="scene">
+
+    <!-- OPHE™ LOGO (Revealed directly above tagline as tagline moves down) -->
+    <div class="logo-group" id="logoGroup" aria-label="Ophe logo">
+      <img class="logo-symbol" id="logoSymbol" src="assets/01_ophe_symbol.png" alt="Ophe symbol">
+      <div class="wordmark-wrap">
+        <img class="logo-wordmark" id="logoWordmark" src="assets/02_ophe_wordmark.png" alt="OPHE">
+        <img class="logo-tm" id="logoTm" src="assets/03_tm.png" alt="™">
+      </div>
+    </div>
+
+    <!-- FINAL TAGLINE GROUP (ALL FIVE ELEMENTS) -->
+    <div class="tagline-group final-tagline-group" id="taglineGroup" aria-label="Bringing HOPE to your doorsteps">
+
+      <!-- 1. LEFT LINE -->
+      <img class="tagline-line line-left" id="leftLine" src="assets/04_left_line.png" alt="">
+
+      <!-- 2. Bringing (enters from LEFT) -->
+      <img class="tagline-piece piece-bringing" id="pieceBringing" src="assets/05_bringing.png" alt="Bringing">
+
+      <!-- 3. PERMANENT CENTER ANCHOR: HOPE -->
+      <div class="tagline-hope-wrap" id="taglineHope" aria-label="HOPE">
+        <!-- 06_hope.png: single visual HOPE artwork -->
+        <img class="asset-hope" id="assetHope" src="assets/06_hope.png" alt="HOPE">
+
+        <!-- Initial individual letters used for OPHE -> HOPE physical rearrangement -->
+        <div class="letters-rearrange" id="lettersWrap" aria-hidden="true">
+          <span class="letter letter-o" id="letterO">O</span>
+          <span class="letter letter-p" id="letterP">P</span>
+          <span class="letter letter-h" id="letterH">H</span>
+          <span class="letter letter-e" id="letterE">E</span>
+        </div>
+      </div>
+
+      <!-- 4. to your doorsteps (enters from RIGHT) -->
+      <img class="tagline-piece piece-doorsteps" id="pieceDoorsteps" src="assets/07_to_your_doorsteps.png" alt="to your doorsteps">
+
+      <!-- 5. RIGHT LINE -->
+      <img class="tagline-line line-right" id="rightLine" src="assets/08_right_line.png" alt="">
+
+    </div>
+
+    <!-- Replay Control -->
+    <button class="replay-btn" id="replayBtn" aria-label="Replay brand animation" title="Replay">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+        <path d="M3 3v5h5"/>
+      </svg>
+      <span>Replay</span>
+    </button>
+
+  </div>
+</main>
+
+<script src="vendor/gsap.min.js"></script>
+<script src="vendor/Flip.min.js"></script>
+<script>
+  if (typeof gsap === 'undefined') {
+    document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"><\/script>');
+    document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Flip.min.js"><\/script>');
+  }
+</script>
+<script src="animation.js"></script>
+</body>
+</html>

@@ -1,0 +1,250 @@
+/* =========================================================
+   OPHE BRAND ANIMATION — GSAP 3 ORCHESTRATED SUITE
+   Deterministic Visual Centering & Motion Architecture
+   ========================================================= */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --color-orange: #fe5d3a;
+  --color-navy: #1b2b33;
+  --color-teal: #017872;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #ffffff;
+  font-family: 'Montserrat', 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Master viewport stage */
+.animation-stage {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Central coordination container */
+.scene {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* =========================================================
+   OPHE™ LOGO GROUP
+   Positioned and scaled dynamically by GSAP
+   Shares exact horizontal center with tagline
+   ========================================================= */
+
+.logo-group {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  visibility: hidden;
+  transform-origin: center center;
+  pointer-events: none;
+  user-select: none;
+  will-change: transform, opacity, filter;
+}
+
+.logo-symbol {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 27.48%;
+  height: 97.9%;
+  object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.wordmark-wrap {
+  position: absolute;
+  left: 27.48%;
+  top: 16.6%;
+  width: 72.52%;
+  height: 83.4%;
+  display: flex;
+  align-items: flex-start;
+}
+
+.logo-wordmark {
+  position: relative;
+  width: 89.8%;
+  height: auto;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.logo-tm {
+  position: relative;
+  width: 10.2%;
+  height: auto;
+  margin-top: 1.5%;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* =========================================================
+   FINAL TAGLINE GROUP (ALL FIVE ELEMENTS)
+   Flex layout centered dynamically by GSAP as ONE unit:
+   [ LEFT LINE ] Bringing [ HOPE ] to your doorsteps [ RIGHT LINE ]
+   ========================================================= */
+
+.tagline-group,
+.final-tagline-group {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  user-select: none;
+  white-space: nowrap;
+  transform-origin: center center;
+  will-change: transform;
+}
+
+.tagline-line {
+  display: block;
+  flex-shrink: 0;
+  object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
+  will-change: transform, opacity;
+}
+
+.tagline-piece {
+  display: block;
+  flex-shrink: 0;
+  height: auto;
+  user-select: none;
+  -webkit-user-drag: none;
+  will-change: transform, opacity;
+}
+
+/* =========================================================
+   HOPE CENTER ANCHOR
+   ========================================================= */
+
+.tagline-hope-wrap {
+  position: relative;
+  flex-shrink: 0;
+  user-select: none;
+  z-index: 5;
+  transform-origin: center center;
+}
+
+/* 06_hope.png: single visual artwork */
+.asset-hope {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0;
+  visibility: hidden;
+  will-change: opacity, transform;
+}
+
+/* Initial rearrangement container */
+.letters-rearrange {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  will-change: opacity, transform;
+}
+
+/* Four individual letters for OPHE -> HOPE */
+.letter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 25%;
+  height: 100%;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+  text-transform: uppercase;
+  line-height: 1;
+  color: var(--color-navy);
+  will-change: transform, color;
+  user-select: none;
+  transform-origin: center center;
+  position: relative;
+}
+
+/* =========================================================
+   REPLAY BUTTON
+   ========================================================= */
+
+.replay-btn {
+  position: fixed;
+  bottom: clamp(20px, 3vh, 36px);
+  right: clamp(20px, 3vw, 36px);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background-color: rgba(27, 43, 51, 0.08);
+  color: var(--color-navy);
+  border: 1px solid rgba(27, 43, 51, 0.16);
+  border-radius: 9999px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  z-index: 100;
+  backdrop-filter: blur(8px);
+}
+
+.replay-btn:hover {
+  background-color: rgba(254, 93, 58, 0.12);
+  color: var(--color-orange);
+  border-color: rgba(254, 93, 58, 0.35);
+  transform: translateY(-2px);
+}
+
+.replay-btn:active {
+  transform: translateY(0);
+}
+
+/* =========================================================
+   ACCESSIBILITY
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-group,
+  .tagline-group,
+  .tagline-piece,
+  .asset-hope,
+  .letter {
+    transition: none !important;
+  }
+}
