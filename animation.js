@@ -339,20 +339,19 @@
 
     layout.finalTaglineX = viewportCenter - taglineVisCenter;
 
-    const rightEdgeAtStart = layout.startX + taglineVisRight;
-    const leftEdgeAtStart = layout.startX + taglineVisLeft;
-    const rightOverflow = rightEdgeAtStart - (layout.vW - 12);
+    // Center the tagline during hold on ALL viewports:
+    // buildOffsetX equals the full centering shift (hopeVisCenter - taglineVisCenter)
+    let offset = hopeVisCenter - taglineVisCenter;
 
-    if (rightOverflow > 0) {
-      let offset = -rightOverflow;
-      const minOffset = 12 - leftEdgeAtStart;
-      if (offset < minOffset) {
-        offset = minOffset;
-      }
-      layout.buildOffsetX = offset;
-    } else {
-      layout.buildOffsetX = 0;
+    // Safety clamp so margins never drop below 12px
+    const minOffset = 12 - (layout.startX + taglineVisLeft);
+    const maxOffset = (layout.vW - 12) - (layout.startX + taglineVisRight);
+    if (minOffset <= maxOffset) {
+      if (offset < minOffset) offset = minOffset;
+      if (offset > maxOffset) offset = maxOffset;
     }
+
+    layout.buildOffsetX = offset;
 
     const symRect = logoSymbol.getBoundingClientRect();
     const tmRect = logoTm.getBoundingClientRect();
@@ -506,6 +505,10 @@
     const waveP = -Math.round(hopeHeight * 0.12);
 
     const wingOffset = Math.min(130, Math.max(50, Math.round(layout.vW * 0.22)));
+    const D = wingOffset;
+    const S = Math.abs(layout.buildOffsetX);
+    const leftWingStart = -(D + S);
+    const rightWingStart = D - S;
 
     const taglineShiftX = finalTaglineX - startX;
     const taglineShiftY = finalTaglineY - startY;
@@ -616,31 +619,30 @@
       [replayBtn, { visibility: ['hidden', 'hidden'] }, { at: 0.0, duration: 10.25 }],
 
       // ==============================================================
-      // PHASE 3: 3.30s – 5.40s: Tagline Wings Build & Slide
+      // PHASE 3: 3.30s – 5.40s: Tagline Wings Build & Slide (Centered)
       // ==============================================================
-      [taglineGroup, { x: [0, layout.buildOffsetX] }, { at: 3.30, duration: 1.0, ease: EASE.power2Out }],
+      [taglineGroup, { x: [0, layout.buildOffsetX] }, { at: 3.30, duration: 1.30, ease: EASE.sineInOut }],
 
       [leftLine, { visibility: ['visible', 'visible'] }, { at: 3.30, duration: 0.001 }],
-      [leftLine, { opacity: [0, 1] }, { at: 3.30, duration: 1.15, ease: EASE.power3Out }],
-      [leftLine, { x: [-wingOffset, 0] }, { at: 3.30, duration: 1.15, ease: EASE.power3Out }],
+      [leftLine, { opacity: [0, 1] }, { at: 3.30, duration: 1.12, ease: EASE.sineInOut }],
+      [leftLine, { x: [leftWingStart, 0] }, { at: 3.30, duration: 1.30, ease: EASE.sineInOut }],
 
       [pieceBringing, { visibility: ['visible', 'visible'] }, { at: 3.36, duration: 0.001 }],
-      [pieceBringing, { opacity: [0, 1] }, { at: 3.36, duration: 1.15, ease: EASE.power3Out }],
-      [pieceBringing, { x: [-wingOffset, 0] }, { at: 3.36, duration: 1.15, ease: EASE.power3Out }],
+      [pieceBringing, { opacity: [0, 1] }, { at: 3.36, duration: 1.12, ease: EASE.sineInOut }],
+      [pieceBringing, { x: [leftWingStart, 0] }, { at: 3.30, duration: 1.30, ease: EASE.sineInOut }],
 
       [pieceDoorsteps, { visibility: ['visible', 'visible'] }, { at: 3.42, duration: 0.001 }],
-      [pieceDoorsteps, { opacity: [0, 1] }, { at: 3.42, duration: 1.15, ease: EASE.power3Out }],
-      [pieceDoorsteps, { x: [wingOffset, 0] }, { at: 3.42, duration: 1.15, ease: EASE.power3Out }],
+      [pieceDoorsteps, { opacity: [0, 1] }, { at: 3.42, duration: 1.12, ease: EASE.sineInOut }],
+      [pieceDoorsteps, { x: [rightWingStart, 0] }, { at: 3.30, duration: 1.30, ease: EASE.sineInOut }],
 
       [rightLine, { visibility: ['visible', 'visible'] }, { at: 3.48, duration: 0.001 }],
-      [rightLine, { opacity: [0, 1] }, { at: 3.48, duration: 1.15, ease: EASE.power3Out }],
-      [rightLine, { x: [wingOffset, 0] }, { at: 3.48, duration: 1.15, ease: EASE.power3Out }],
+      [rightLine, { opacity: [0, 1] }, { at: 3.48, duration: 1.12, ease: EASE.sineInOut }],
+      [rightLine, { x: [rightWingStart, 0] }, { at: 3.30, duration: 1.30, ease: EASE.sineInOut }],
 
       // ==============================================================
-      // PHASE 4: 5.40s – 7.25s: S-Curve Descent & OPHE Logo
+      // PHASE 4: 5.40s – 7.25s: Pure Vertical Descent & OPHE Logo
       // ==============================================================
       [taglineGroup, { y: [0, taglineShiftY] }, { at: 5.40, duration: 1.85, ease: EASE.power2InOut }],
-      [taglineGroup, { x: [layout.buildOffsetX, taglineShiftX] }, { at: 5.40, duration: 1.85, ease: EASE.power3InOut }],
 
       [logoGroup, { scale: [0.92, 1.0] }, { at: 5.40, duration: 1.85, ease: EASE.power2InOut }],
       [logoGroup, { filter: ['blur(14px)', 'blur(0px)'] }, { at: 5.40, duration: 1.85, ease: EASE.power2InOut }],
@@ -663,6 +665,11 @@
     });
 
     const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('debug') === '1') {
+      window.masterControls = masterControls;
+      window.syncVisibilityAndFilter = syncVisibilityAndFilter;
+      window.layout = layout;
+    }
     if (urlParams.has('time')) {
       const t = parseFloat(urlParams.get('time'));
       masterControls.pause();

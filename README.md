@@ -66,19 +66,25 @@ Both the complete logo group and the complete tagline group align to the exact s
   - Total orange ink coverage never dips below 97% of baseline.
 - **Hold**: `HOPE` rests stationary and centered in the viewport for 0.55s (2.75s – 3.30s).
 
-### 4. Build Complete Tagline Around Stationary HOPE (3.30s – 5.40s)
-- `HOPE` remains stationary and centered until 3.30s.
-- **Dynamic Viewport Fit (`buildOffsetX`)**:
-  - Runtime measurement in `calculateLayout()` computes `buildOffsetX`: if the asymmetric tagline overflows on narrower screens (e.g. mobile 390px, 320px), the group slides smoothly leftward (`x: [0, buildOffsetX]`, duration 1.0s, `power2.out`, 3.30s – 4.30s) while wings enter.
-  - Keeps the entire tagline inside the viewport with `>= 12px` margins on both sides without arbitrary breakpoints.
-  - Desktop and tablet maintain offset `0` when fitting within margins.
-- **Clamped Wing Entrances**:
-  - Flanking wings entrance start offsets are clamped based on viewport width (`Math.min(130, Math.max(50, Math.round(vW * 0.22)))`) for a clean, proportional reveal.
-- **Hold**: Complete tagline holds stably for ~0.77s (4.63s – 5.40s) before seamless handoff into descent.
+### 4. Build Complete Tagline Around HOPE with Shared-Curve Glide & Centered Hold (3.30s – 5.40s)
+- `HOPE` is held at the screen center until 3.30s.
+- **Shared-Curve Screen-Space Entrance (3.30s – 4.60s, 1.30s, `sine.inOut [0.445, 0.05, 0.55, 0.95]`)**:
+  - All positional components share the identical `sine.inOut` progress curve, eliminating drift or cancellation:
+    - Entire `taglineGroup` glides horizontally: `x: [0, layout.buildOffsetX]`
+    - Left wing (`leftLine`, `pieceBringing`) relative entrance: `x: [-(D + S), 0]`
+    - Right wing (`pieceDoorsteps`, `rightLine`) relative entrance: `x: [D - S, 0]`
+    - Where $D = \min(130, \max(50, \text{round}(vW \times 0.22)))$ and $S = |\text{buildOffsetX}|$.
+    - Net screen-space travel: HOPE travels left by $S$, left wing travels right by $D$, right wing travels left by $D$.
+  - Opacity transitions fade in from each piece's start time through 4.60s with `sine.inOut` (staggered by 0.06s).
+- **Centered Hold Across ALL Viewports (4.60s – 5.40s, ~0.80s)**:
+  - `buildOffsetX` equals the full centering shift (`hopeVisCenter - taglineVisCenter`).
+  - Visible tagline (left edge of `leftLine` to right edge of `rightLine`) is horizontally centered on the viewport center across all viewports: left margin equals right margin within subpixel precision (< 1px diff).
+  - Clamping ensures side margins never drop below 12px.
+  - Zero jerk, zero velocity reversal, and smooth stop-start transitions.
 
-### 5. Fluid S-Curve Tagline Drop-Down & Resolving OPHE™ Logo (5.40s – 7.25s)
-- Entire `.final-tagline-group` (Left Line + Bringing + HOPE + to your doorsteps + Right Line) moves downward as **ONE UNIFIED GROUP**.
-- **S-Curve Motion**: `y` translation uses `power2.inOut` (1.85s) while horizontal shift `x` uses `power3.inOut` (1.85s). The path starts mostly vertical, bends gently in the middle, and lands vertically.
+### 5. Pure Vertical Tagline Descent & Resolving OPHE™ Logo (5.40s – 7.25s)
+- **Pure Vertical Drop**: Because the tagline is already centered horizontally during the hold, the horizontal ($x$) motion during the descent is eliminated (`taglineGroup` $x$ translation remains constant).
+- Entire `.final-tagline-group` drops vertically as **ONE UNIFIED GROUP** (`y: [0, taglineShiftY]`, 1.85s, `power2.inOut`). Zero horizontal drift (HOPE center X changes < 0.5px).
 - **Logo Blur & Scale Resolution**: Dominant OPHE™ logo (`01_ophe_symbol.png` + `02_ophe_wordmark.png` + `03_tm.png`) emerges blurred (`scale: [0.92, 1.0]`, `blur(14px) → blur(0px)`) and steadily clears over the full 1.85s descent window using `power2.inOut`, reaching razor sharpness at exactly 7.25s as the tagline lands. Opacity fades in over 1.4s with `sine.inOut` (from 5.55s).
 - **Deterministic Filter Cleanup**: `filter: none` is explicitly applied with CSS priority at 7.25s to eliminate residual browser compositing layers.
 - **Z-Order**: Tagline renders on `z-index: 10` above the logo (`z-index: 1`), ensuring flawless legibility as it passes downward.
@@ -118,7 +124,8 @@ GSAP polynomial eases have been converted to exact CSS cubic-bezier curves for s
 - **Subpixel Centering**: Exact horizontal centering verified via `getBoundingClientRect()`.
 - **Debugging & Telemetry**: `validateAlignment()` logs detailed metrics only when `?debug=1` is present in URL.
 - **Reduced Motion**: Respects `prefers-reduced-motion` by instantly rendering the final lockup with `filter: none`.
-- **Keyframe Inspection**: Supports URL query parameters (e.g., `?time=5.8` or `?progress=1.0`) for inspecting specific timestamps.
+- **Asset Cleanup (Part B)**: Cleaned stray faint horizontal artifact in `07_to_your_doorsteps.png` by zeroing out exactly 75 stray pixels ($y \in [0, 2]$, $x \in [82, 144]$) that sat 30 rows above the glyph ink. All true glyph ink ($y \ge 4$) and image dimensions ($841 \times 113$) remain 100% byte-for-byte identical.
+- **Keyframe Inspection**: Supports URL query parameters (e.g., `?time=5.0` or `?progress=1.0`) for inspecting specific timestamps.
 
 ## How to Run
 
