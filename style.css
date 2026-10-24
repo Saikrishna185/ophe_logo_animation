@@ -1,7 +1,23 @@
 /* =========================================================
-   OPHE BRAND ANIMATION — GSAP 3 ORCHESTRATED SUITE
+   OPHE BRAND ANIMATION — MOTION (VANILLA JS) SUITE
    Deterministic Visual Centering & Motion Architecture
    ========================================================= */
+
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 700;
+  font-display: block;
+  src: url('fonts/montserrat-latin-700-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 800;
+  font-display: block;
+  src: url('fonts/montserrat-latin-800-normal.woff2') format('woff2');
+}
 
 * {
   box-sizing: border-box;
@@ -21,7 +37,7 @@ body {
   height: 100%;
   overflow: hidden;
   background-color: #ffffff;
-  font-family: 'Montserrat', 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -48,7 +64,7 @@ body {
 
 /* =========================================================
    OPHE™ LOGO GROUP
-   Positioned and scaled dynamically by GSAP
+   Positioned and scaled dynamically by Motion
    Shares exact horizontal center with tagline
    ========================================================= */
 
@@ -62,6 +78,7 @@ body {
   pointer-events: none;
   user-select: none;
   will-change: transform, opacity, filter;
+  z-index: 1;
 }
 
 .logo-symbol {
@@ -104,7 +121,7 @@ body {
 
 /* =========================================================
    FINAL TAGLINE GROUP (ALL FIVE ELEMENTS)
-   Flex layout centered dynamically by GSAP as ONE unit:
+   Flex layout centered dynamically by Motion as ONE unit:
    [ LEFT LINE ] Bringing [ HOPE ] to your doorsteps [ RIGHT LINE ]
    ========================================================= */
 
@@ -121,6 +138,7 @@ body {
   white-space: nowrap;
   transform-origin: center center;
   will-change: transform;
+  z-index: 10;
 }
 
 .tagline-line {
@@ -201,8 +219,14 @@ body {
 
 .replay-btn {
   position: fixed;
-  bottom: clamp(20px, 3vh, 36px);
-  right: clamp(20px, 3vw, 36px);
+  top: auto;
+  left: auto;
+  right: max(clamp(20px, 3vw, 36px), env(safe-area-inset-right));
+  bottom: max(clamp(20px, 3vh, 36px), env(safe-area-inset-bottom));
+  width: auto;
+  height: auto;
+  max-width: max-content;
+  max-height: none;
   display: inline-flex;
   align-items: center;
   gap: 8px;
